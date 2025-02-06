@@ -31,7 +31,7 @@ Stone is a free and open-source Astro theme specially designed for Business, Mar
 Navigate to your project folder and install its dependencies:
 
 ```
-npm install
+pnpm install
 ```
 
 ### Start
@@ -39,7 +39,7 @@ npm install
 Once the installation is done, you can now run your app:
 
 ```
-npm run dev
+pnpm run dev
 ```
 
 This runs the app in development mode. Open http://localhost:3000 to view it in the browser.
