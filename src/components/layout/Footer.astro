@@ -1,4 +1,9 @@
 ---
+
+interface Props {
+  description: string;
+}
+
 const bottomLinks = [
   {
     header: 'Social',
@@ -71,6 +76,8 @@ const bottomLinks = [
     ],
   },
 ];
+
+const { description } = Astro.props;
 ---
 
 <footer
@@ -92,8 +99,7 @@ const bottomLinks = [
         /> 
         */}
         <p class="text-primary-950/70 dark:text-primary-200/70 text-base">
-          Stone is a premium Astro theme specially designed for Business, Marketing, SaaS and
-          Startup websites.
+          {description}
         </p>
         <p class="text-primary-950/70 dark:text-primary-200/70 text-sm">© 2025 Baker Laboratories</p>
       </div>
