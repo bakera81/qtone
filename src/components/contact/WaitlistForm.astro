@@ -1,14 +1,14 @@
 ---
-// ContactForm.astro
+// WaitlistForm.astro
 ---
 
 <section class="py-16 sm:py-20">
   <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
     <div class="grid gap-12 lg:grid-cols-2 lg:gap-8">
       <div class="flex flex-col gap-4 sm:gap-6">
-        <h2 class="text-3xl font-medium tracking-tight sm:text-4xl">Let's work together</h2>
+        <h2 class="text-3xl font-medium tracking-tight sm:text-4xl">Get early access</h2>
         <p class="text-primary-950/70 dark:text-primary-200/70 max-w-lg text-lg sm:text-xl">
-          We'd love to learn more about you and what we can build together.
+          Join our waitlist to get early access to qtone.
         </p>
       </div>
       <form id="contact-form" class="mt-3 flex flex-col gap-y-6">
@@ -29,7 +29,7 @@
         <!-- Meeting Software -->
         <div class="space-y-3">
           <label class="block text-base font-medium text-primary-950 dark:text-primary-200">
-            Preferred Meeting Software
+            Meeting Software
           </label>
           <div class="space-y-2">
             {['Microsoft Teams', 'Zoom', 'Google Meet', 'Other'].map((option) => (
@@ -123,7 +123,7 @@
             class="bg-primary-600 dark:bg-primary-400 hover:bg-primary-700 dark:hover:bg-primary-300 focus-visible:outline-primary-600 dark:focus-visible:outline-primary-400 dark:text-primary-950 inline-flex items-center justify-center rounded-full border border-transparent px-5 py-3 text-base font-medium text-white transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
             type="submit"
           >
-            Submit
+            Join waitlist
           </button>
         </div>
       </form>
