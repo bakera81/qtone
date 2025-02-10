@@ -10,6 +10,8 @@ interface Props {
   title: string;
 }
 
+const recaptchaSiteKey = import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY;
+
 const { description, title } = Astro.props;
 ---
 
@@ -24,6 +26,16 @@ const { description, title } = Astro.props;
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
+    <script is:inline define:vars={{ recaptchaSiteKey }}>
+      window.recaptchaSiteKey = recaptchaSiteKey;
+      window.recaptchaLoaded = false;  // Initialize as false
+    </script>
+    <script>
+      function onRecaptchaLoad() {
+        window.recaptchaLoaded = true;
+      }
+    </script>
+    <script src={`https://www.google.com/recaptcha/api.js?render=${recaptchaSiteKey}`} />
     <title>{title}</title>
     <ViewTransitions />
   </head>

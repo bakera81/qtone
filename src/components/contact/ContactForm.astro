@@ -1,3 +1,7 @@
+---
+// ContactForm.astro
+---
+
 <section class="py-16 sm:py-20">
   <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
     <div class="grid gap-12 lg:grid-cols-2 lg:gap-8">
@@ -7,45 +11,115 @@
           We'd love to learn more about you and what we can build together.
         </p>
       </div>
-      <form action="#" method="POST" class="mt-3 flex flex-col gap-y-6">
-        <!-- Full name input -->
-        <div>
-          <label for="full-name" class="sr-only">Full name</label>
-          <input
-            type="text"
-            name="full-name"
-            id="full-name"
-            autocomplete="name"
-            class="hover:ring-primary-600 focus:ring-primary-600 dark:hover:ring-primary-400 dark:focus:ring-primary-400 bg-primary-50 dark:bg-primary-950 ring-primary-900/40 dark:ring-primary-200/40 placeholder:text-primary-950/60 dark:placeholder:text-primary-200/60 block w-full appearance-none rounded-md border-0 px-4 py-4 text-base ring-1 transition focus:outline-none focus:ring-2"
-            placeholder="Full name"
-          />
-        </div>
-
+      <form id="contact-form" class="mt-3 flex flex-col gap-y-6">
         <!-- Email input -->
         <div>
           <label for="email" class="sr-only">Email</label>
+          {console.log()}
           <input
             type="email"
             name="email"
             id="email"
             autocomplete="email"
+            required
             class="hover:ring-primary-600 focus:ring-primary-600 dark:hover:ring-primary-400 dark:focus:ring-primary-400 bg-primary-50 dark:bg-primary-950 ring-primary-900/40 dark:ring-primary-200/40 placeholder:text-primary-950/60 dark:placeholder:text-primary-200/60 block w-full appearance-none rounded-md border-0 px-4 py-4 text-base ring-1 transition focus:outline-none focus:ring-2"
             placeholder="Email"
           />
         </div>
 
-        <!-- Message textarea -->
-        <div>
-          <label for="message" class="sr-only">Message</label>
-          <textarea
-            name="message"
-            id="message"
-            rows="3"
-            class="hover:ring-primary-600 focus:ring-primary-600 dark:hover:ring-primary-400 dark:focus:ring-primary-400 bg-primary-50 dark:bg-primary-950 ring-primary-900/40 dark:ring-primary-200/40 placeholder:text-primary-950/60 dark:placeholder:text-primary-200/60 block w-full appearance-none rounded-md border-0 px-4 py-4 text-base ring-1 transition focus:outline-none focus:ring-2"
-            placeholder="Message"></textarea>
+        <!-- Meeting Software -->
+        <div class="space-y-3">
+          <label class="block text-base font-medium text-primary-950 dark:text-primary-200">
+            Preferred Meeting Software
+          </label>
+          <div class="space-y-2">
+            {['Microsoft Teams', 'Zoom', 'Google Meet', 'Other'].map((option) => (
+              <div class="flex items-center gap-x-3">
+                <input
+                  type="radio"
+                  name="meeting-software"
+                  value={option}
+                  id={`meeting-software-${option.toLowerCase().replace(' ', '-')}`}
+                  class="h-4 w-4 border-primary-300 text-primary-600 focus:ring-primary-600"
+                  required
+                />
+                <label
+                  for={`meeting-software-${option.toLowerCase().replace(' ', '-')}`}
+                  class="block text-sm leading-6 text-primary-950 dark:text-primary-200"
+                >
+                  {option}
+                </label>
+              </div>
+            ))}
+          </div>
+          
+           <!-- Other Meeting Software Input (conditionally shown) -->
+           <div id="other-meeting-software-container" class="hidden">
+            <input
+              type="text"
+              name="meeting-software-other"
+              id="meeting-software-other"
+              class="hover:ring-primary-600 focus:ring-primary-600 dark:hover:ring-primary-400 dark:focus:ring-primary-400 bg-primary-50 dark:bg-primary-950 ring-primary-900/40 dark:ring-primary-200/40 placeholder:text-primary-950/60 dark:placeholder:text-primary-200/60 block w-full appearance-none rounded-md border-0 px-4 py-4 text-base ring-1 transition focus:outline-none focus:ring-2"
+              placeholder="Please specify"
+            />
+          </div>
         </div>
 
-        <div>
+        <!-- Operating System -->
+        <div class="space-y-3">
+          <label class="block text-base font-medium text-primary-950 dark:text-primary-200">
+            Operating System
+          </label>
+          <div class="space-y-2">
+            {['Mac', 'Windows', 'Other'].map((option) => (
+              <div class="flex items-center gap-x-3">
+                <input
+                  type="radio"
+                  name="os"
+                  value={option}
+                  id={`os-${option.toLowerCase()}`}
+                  class="h-4 w-4 border-primary-300 text-primary-600 focus:ring-primary-600"
+                  required
+                />
+                <label
+                  for={`os-${option.toLowerCase()}`}
+                  class="block text-sm leading-6 text-primary-950 dark:text-primary-200"
+                >
+                  {option}
+                </label>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <!-- User Research Permission -->
+        <div class="space-y-3">
+          <label class="block text-base font-medium text-primary-950 dark:text-primary-200">
+            Can we contact you for user research?
+          </label>
+          <div class="space-y-2">
+            {['Yes', 'No'].map((option) => (
+              <div class="flex items-center gap-x-3">
+                <input
+                  type="radio"
+                  name="user-research"
+                  value={option.toLowerCase()}
+                  id={`user-research-${option.toLowerCase()}`}
+                  class="h-4 w-4 border-primary-300 text-primary-600 focus:ring-primary-600"
+                  required
+                />
+                <label
+                  for={`user-research-${option.toLowerCase()}`}
+                  class="block text-sm leading-6 text-primary-950 dark:text-primary-200"
+                >
+                  {option}
+                </label>
+              </div>
+            ))}
+          </div>
+        </div>
+
+                <div>
           <button
             class="bg-primary-600 dark:bg-primary-400 hover:bg-primary-700 dark:hover:bg-primary-300 focus-visible:outline-primary-600 dark:focus-visible:outline-primary-400 dark:text-primary-950 inline-flex items-center justify-center rounded-full border border-transparent px-5 py-3 text-base font-medium text-white transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
             type="submit"
@@ -57,3 +131,111 @@
     </div>
   </div>
 </section>
+
+<script is:inline>
+  // Wait for reCAPTCHA to be ready
+  const waitForRecaptcha = () => {
+    return new Promise((resolve) => {
+      console.log('Checking reCAPTCHA status...');
+      if (window.recaptchaLoaded) {
+        console.log('reCAPTCHA already loaded');
+        resolve();
+      } else {
+        console.log('Waiting for reCAPTCHA to load...');
+        const checkRecaptcha = setInterval(() => {
+          if (window.recaptchaLoaded) {
+            console.log('reCAPTCHA loaded successfully');
+            clearInterval(checkRecaptcha);
+            resolve();
+          }
+        }, 100);
+      }
+    });
+  };
+
+  const form = document.getElementById('contact-form');
+  const otherMeetingSoftwareContainer = document.getElementById('other-meeting-software-container');
+  const otherMeetingSoftwareInput = document.getElementById('meeting-software-other');
+  
+  // Handle showing/hiding the "Other" meeting software input
+  document.querySelectorAll('input[name="meeting-software"]').forEach((radio) => {
+    radio.addEventListener('change', (e) => {
+      const target = e.target;
+      if (target.value === 'Other') {
+        otherMeetingSoftwareContainer?.classList.remove('hidden');
+        otherMeetingSoftwareInput.required = true;
+      } else {
+        otherMeetingSoftwareContainer?.classList.add('hidden');
+        otherMeetingSoftwareInput.required = false;
+        otherMeetingSoftwareInput.value = '';
+      }
+    });
+  });
+  
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    let recaptchaResponse;
+    try {
+      if (!window.recaptchaLoaded) {
+        throw new Error('reCAPTCHA not loaded yet');
+      }
+      recaptchaResponse = await window.grecaptcha.execute('6Le2AdIqAAAAAL_naWOFPxNSI8iYrLfHwgndRXa1', {action: 'submit'});
+      if (!recaptchaResponse) {
+        throw new Error('reCAPTCHA verification failed');
+      }
+    } catch (error) {
+      console.error('reCAPTCHA error:', error);
+      alert('Error verifying reCAPTCHA. Please try again later.');
+      return;
+    }
+    
+    const formData = new FormData(form);
+    const data = {
+      email: formData.get('email'),
+      meetingSoftware: formData.get('meeting-software'),
+      meetingSoftwareOther: formData.get('meeting-software-other'),
+      os: formData.get('os'),
+      userResearch: formData.get('user-research') === 'yes',
+      recaptchaResponse
+    };
+    
+    console.log({'formData': formData});
+    
+    try {
+      const submitButton = form.querySelector('button[type="submit"]');
+      submitButton.disabled = true;
+      submitButton.textContent = 'Submitting...';
+      
+      const response = await fetch('/api/submit-form', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+      
+      if (!response.ok) {
+        console.log(response);
+        throw new Error('Form submission failed');
+      }
+      
+      // Reset form and reCAPTCHA
+      form.reset();
+      window.grecaptcha.reset();
+      otherMeetingSoftwareContainer?.classList.add('hidden');
+      otherMeetingSoftwareInput.required = false;
+      
+      // Show success message
+      alert('Form submitted successfully!');
+      
+    } catch (error) {
+      console.error('Error:', error);
+      alert('There was an error submitting the form. Please try again.');
+    } finally {
+      const submitButton = form.querySelector('button[type="submit"]');
+      submitButton.disabled = false;
+      submitButton.textContent = 'Submit';
+    }
+  });
+</script>
