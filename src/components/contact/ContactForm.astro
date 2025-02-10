@@ -15,7 +15,6 @@
         <!-- Email input -->
         <div>
           <label for="email" class="sr-only">Email</label>
-          {console.log()}
           <input
             type="email"
             name="email"
@@ -132,27 +131,7 @@
   </div>
 </section>
 
-<script is:inline>
-  // Wait for reCAPTCHA to be ready
-  const waitForRecaptcha = () => {
-    return new Promise((resolve) => {
-      console.log('Checking reCAPTCHA status...');
-      if (window.recaptchaLoaded) {
-        console.log('reCAPTCHA already loaded');
-        resolve();
-      } else {
-        console.log('Waiting for reCAPTCHA to load...');
-        const checkRecaptcha = setInterval(() => {
-          if (window.recaptchaLoaded) {
-            console.log('reCAPTCHA loaded successfully');
-            clearInterval(checkRecaptcha);
-            resolve();
-          }
-        }, 100);
-      }
-    });
-  };
-
+<script>
   const form = document.getElementById('contact-form');
   const otherMeetingSoftwareContainer = document.getElementById('other-meeting-software-container');
   const otherMeetingSoftwareInput = document.getElementById('meeting-software-other');
@@ -160,8 +139,7 @@
   // Handle showing/hiding the "Other" meeting software input
   document.querySelectorAll('input[name="meeting-software"]').forEach((radio) => {
     radio.addEventListener('change', (e) => {
-      const target = e.target;
-      if (target.value === 'Other') {
+      if (e.target.value === 'Other') {
         otherMeetingSoftwareContainer?.classList.remove('hidden');
         otherMeetingSoftwareInput.required = true;
       } else {
@@ -175,34 +153,35 @@
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     
-    let recaptchaResponse;
     try {
-      if (!window.recaptchaLoaded) {
-        throw new Error('reCAPTCHA not loaded yet');
-      }
-      recaptchaResponse = await window.grecaptcha.execute('6Le2AdIqAAAAAL_naWOFPxNSI8iYrLfHwgndRXa1', {action: 'submit'});
-      if (!recaptchaResponse) {
+      // Execute reCAPTCHA
+      const recaptchaResponse = await grecaptcha.execute(window.recaptchaSiteKey, {
+        action: 'submit'
+      });
+
+      // Verify reCAPTCHA first
+      const verificationResponse = await fetch('/api/verify-captcha', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ recaptchaResponse }),
+      });
+
+      if (!verificationResponse.ok) {
         throw new Error('reCAPTCHA verification failed');
       }
-    } catch (error) {
-      console.error('reCAPTCHA error:', error);
-      alert('Error verifying reCAPTCHA. Please try again later.');
-      return;
-    }
-    
-    const formData = new FormData(form);
-    const data = {
-      email: formData.get('email'),
-      meetingSoftware: formData.get('meeting-software'),
-      meetingSoftwareOther: formData.get('meeting-software-other'),
-      os: formData.get('os'),
-      userResearch: formData.get('user-research') === 'yes',
-      recaptchaResponse
-    };
-    
-    console.log({'formData': formData});
-    
-    try {
+
+      // If verification successful, proceed with form submission
+      const formData = new FormData(form);
+      const data = {
+        email: formData.get('email'),
+        meetingSoftware: formData.get('meeting-software'),
+        meetingSoftwareOther: formData.get('meeting-software-other'),
+        os: formData.get('os'),
+        userResearch: formData.get('user-research') === 'yes'
+      };
+      
       const submitButton = form.querySelector('button[type="submit"]');
       submitButton.disabled = true;
       submitButton.textContent = 'Submitting...';
@@ -216,17 +195,14 @@
       });
       
       if (!response.ok) {
-        console.log(response);
         throw new Error('Form submission failed');
       }
       
-      // Reset form and reCAPTCHA
+      // Reset form
       form.reset();
-      window.grecaptcha.reset();
       otherMeetingSoftwareContainer?.classList.add('hidden');
       otherMeetingSoftwareInput.required = false;
       
-      // Show success message
       alert('Form submitted successfully!');
       
     } catch (error) {

@@ -28,14 +28,8 @@ const { description, title } = Astro.props;
     <meta name="description" content={description} />
     <script is:inline define:vars={{ recaptchaSiteKey }}>
       window.recaptchaSiteKey = recaptchaSiteKey;
-      window.recaptchaLoaded = false;  // Initialize as false
     </script>
-    <script>
-      function onRecaptchaLoad() {
-        window.recaptchaLoaded = true;
-      }
-    </script>
-    <script src={`https://www.google.com/recaptcha/api.js?render=${recaptchaSiteKey}`} />
+    <script src={`https://www.google.com/recaptcha/api.js?render=${recaptchaSiteKey}`} async defer></script>
     <title>{title}</title>
     <ViewTransitions />
   </head>
