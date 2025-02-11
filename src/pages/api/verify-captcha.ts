@@ -1,5 +1,7 @@
 // src/pages/api/verify-captcha.ts
 import type { APIRoute } from 'astro';
+import * as Sentry from "@sentry/astro";
+
 
 const RECAPTCHA_SECRET_KEY = import.meta.env.RECAPTCHA_SECRET_KEY;
 
@@ -20,8 +22,18 @@ export const POST: APIRoute = async ({ request }) => {
     });
 
     const verificationResult = await recaptchaVerification.json();
-    // console.log({'verificationResult': verificationResult});
     if (!verificationResult.success || verificationResult.score < 0.5) {
+      // Log the failed verification with context
+      Sentry.captureMessage(
+        'reCAPTCHA verification failed', 
+        {
+          level: 'warning',
+          extra: {
+            score: verificationResult.score,
+            success: verificationResult.success,
+          }
+        }
+      );
       return new Response(
         JSON.stringify({ error: 'reCAPTCHA verification failed' }),
         { status: 400 }

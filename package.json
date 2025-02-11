@@ -15,6 +15,7 @@
     "@astrojs/tailwind": "6.0.0",
     "@fontsource/inter": "5.0.8",
     "@playform/compress": "^0.1.7",
+    "@sentry/astro": "^9.0.1",
     "@types/alpinejs": "3.7.2",
     "airtable": "^0.12.2",
     "alpinejs": "3.12.3",
