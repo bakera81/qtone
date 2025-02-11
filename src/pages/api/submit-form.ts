@@ -6,7 +6,7 @@ const AIRTABLE_API_KEY = import.meta.env.AIRTABLE_API_KEY;
 const AIRTABLE_BASE_ID = import.meta.env.AIRTABLE_BASE_ID;
 const AIRTABLE_TABLE_ID = import.meta.env.AIRTABLE_TABLE_ID;
 
-export const post: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request }) => {
   try {
     const data = await request.json();
     const { email, meetingSoftware, meetingSoftwareOther, os, userResearch } = data;

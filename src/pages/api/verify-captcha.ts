@@ -3,7 +3,7 @@ import type { APIRoute } from 'astro';
 
 const RECAPTCHA_SECRET_KEY = import.meta.env.RECAPTCHA_SECRET_KEY;
 
-export const post: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request }) => {
   const data = await request.json();
   const { recaptchaResponse } = data;
 
