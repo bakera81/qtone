@@ -20,7 +20,7 @@ export const POST: APIRoute = async ({ request }) => {
     });
 
     const verificationResult = await recaptchaVerification.json();
-
+    // console.log({'verificationResult': verificationResult});
     if (!verificationResult.success || verificationResult.score < 0.5) {
       return new Response(
         JSON.stringify({ error: 'reCAPTCHA verification failed' }),
