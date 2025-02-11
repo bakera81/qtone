@@ -1,10 +1,15 @@
 ---
 // WaitlistForm.astro
+import { ClientRouter } from 'astro:transitions';
 ---
 
 <section class="py-16 sm:py-20">
   <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-    <div id="form-container" class="grid gap-12 lg:grid-cols-2 lg:gap-8">
+    <div 
+      id="form-container" 
+      class="grid gap-12 lg:grid-cols-2 lg:gap-8 transition-opacity duration-300 ease-in-out"
+      transition:animate="slide"
+    >
       <div class="flex flex-col gap-4 sm:gap-6">
         <h2 class="text-3xl font-medium tracking-tight sm:text-4xl">Get early access</h2>
         <p class="text-primary-950/70 dark:text-primary-200/70 max-w-lg text-lg sm:text-xl">
@@ -130,11 +135,17 @@
     </div>
 
     <!-- Success Message (hidden by default) -->
-    <div id="success-message" class="hidden text-center">
-      <h2 class="text-3xl font-medium tracking-tight sm:text-4xl mb-4">Thank you</h2>
-      <p class="text-primary-950/70 dark:text-primary-200/70 text-lg sm:text-xl">
-        We'll be in touch soon.
-      </p>
+    <div 
+      id="success-message" 
+      class="hidden opacity-0 transition-all duration-300 ease-in-out transform translate-y-4"
+      transition:animate="slide"
+    >
+      <div class="text-center">
+        <h2 class="text-3xl font-medium tracking-tight sm:text-4xl mb-4">Thank you.</h2>
+        <p class="text-primary-950/70 dark:text-primary-200/70 text-lg sm:text-xl">
+          We'll be in touch soon.
+        </p>
+      </div>
     </div>
   </div>
 </section>
@@ -207,15 +218,24 @@
       if (!response.ok) {
         throw new Error('Form submission failed');
       }
-      // Hide form and show success message
-      formContainer.classList.add('hidden');
-      successMessage.classList.remove('hidden');
-
-      // Reset form
-      form.reset();
-      otherMeetingSoftwareContainer?.classList.add('hidden');
-      otherMeetingSoftwareInput.required = false;
-      // alert('Form submitted successfully!');
+      
+      // Fade out form
+      formContainer.style.opacity = '0';
+      
+      // After form fades out, show success message
+      setTimeout(() => {
+        formContainer.classList.add('hidden');
+        successMessage.classList.remove('hidden');
+        // Trigger fade in of success message
+        requestAnimationFrame(() => {
+          successMessage.classList.remove('opacity-0', 'translate-y-4');
+        });
+        // Reset form
+        form.reset();
+        otherMeetingSoftwareContainer?.classList.add('hidden');
+        otherMeetingSoftwareInput.required = false;
+        // alert('Form submitted successfully!');
+      }, 300); // Match the duration of the opacity transition
       
     } catch (error) {
       console.error('Error:', error);
