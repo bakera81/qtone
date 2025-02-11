@@ -4,7 +4,7 @@
 
 <section class="py-16 sm:py-20">
   <div class="mx-auto max-w-2xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-    <div class="grid gap-12 lg:grid-cols-2 lg:gap-8">
+    <div id="form-container" class="grid gap-12 lg:grid-cols-2 lg:gap-8">
       <div class="flex flex-col gap-4 sm:gap-6">
         <h2 class="text-3xl font-medium tracking-tight sm:text-4xl">Get early access</h2>
         <p class="text-primary-950/70 dark:text-primary-200/70 max-w-lg text-lg sm:text-xl">
@@ -118,7 +118,7 @@
           </div>
         </div>
 
-                <div>
+        <div>
           <button
             class="bg-primary-600 dark:bg-primary-400 hover:bg-primary-700 dark:hover:bg-primary-300 focus-visible:outline-primary-600 dark:focus-visible:outline-primary-400 dark:text-primary-950 inline-flex items-center justify-center rounded-full border border-transparent px-5 py-3 text-base font-medium text-white transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
             type="submit"
@@ -128,11 +128,21 @@
         </div>
       </form>
     </div>
+
+    <!-- Success Message (hidden by default) -->
+    <div id="success-message" class="hidden text-center">
+      <h2 class="text-3xl font-medium tracking-tight sm:text-4xl mb-4">Thank you</h2>
+      <p class="text-primary-950/70 dark:text-primary-200/70 text-lg sm:text-xl">
+        We'll be in touch soon.
+      </p>
+    </div>
   </div>
 </section>
 
 <script>
   const form = document.getElementById('contact-form');
+  const formContainer = document.getElementById('form-container');
+  const successMessage = document.getElementById('success-message');
   const otherMeetingSoftwareContainer = document.getElementById('other-meeting-software-container');
   const otherMeetingSoftwareInput = document.getElementById('meeting-software-other');
   
@@ -197,13 +207,15 @@
       if (!response.ok) {
         throw new Error('Form submission failed');
       }
-      
+      // Hide form and show success message
+      formContainer.classList.add('hidden');
+      successMessage.classList.remove('hidden');
+
       // Reset form
       form.reset();
       otherMeetingSoftwareContainer?.classList.add('hidden');
       otherMeetingSoftwareInput.required = false;
-      
-      alert('Form submitted successfully!');
+      // alert('Form submitted successfully!');
       
     } catch (error) {
       console.error('Error:', error);
