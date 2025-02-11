@@ -1,8 +1,7 @@
 ---
 import '@fontsource/inter/latin-400.css';
 import '@fontsource/inter/latin-500.css';
-import { ViewTransitions } from 'astro:transitions';
-import Footer from '../components/layout/Footer.astro';
+import { ClientRouter } from 'astro:transitions';import Footer from '../components/layout/Footer.astro';
 import Header from '../components/layout/Header.astro';
 
 interface Props {
@@ -34,7 +33,7 @@ let defaultTitle = title ? title : 'qtone · AI tone coach for video calls';
     </script>
     <script src={`https://www.google.com/recaptcha/api.js?render=${recaptchaSiteKey}`} async defer></script>
     <title>{defaultTitle}</title>
-    <ViewTransitions />
+    <ClientRouter />
   </head>
   <body
     class="bg-primary-50 text-primary-950 dark:bg-primary-950 dark:text-primary-200 antialiased transition"
