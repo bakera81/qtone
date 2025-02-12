@@ -37,6 +37,15 @@ let defaultTitle = title ? title : 'qtone · AI tone coach for video calls';
     <title>{defaultTitle}</title>
     <ClientRouter />
   </head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-3RPYCXGH8D"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-3RPYCXGH8D');
+  </script>
   <body
     class="bg-primary-50 text-primary-950 dark:bg-primary-950 dark:text-primary-200 antialiased transition"
   >
