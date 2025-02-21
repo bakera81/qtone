@@ -22,7 +22,7 @@ export const POST: APIRoute = async ({ request }) => {
     });
 
     const verificationResult = await recaptchaVerification.json();
-    if (!verificationResult.success || verificationResult.score < 0.5) {
+    if (!verificationResult.success || verificationResult.score >= 0.5) {
       // Log the failed verification with context
       Sentry.captureMessage(
         'reCAPTCHA verification failed', 
