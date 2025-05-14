@@ -1,15 +1,35 @@
-// src/pages/api/submit-form.ts
 import type { APIRoute } from "astro";
 import Airtable from "airtable";
 
 const AIRTABLE_API_KEY = import.meta.env.AIRTABLE_API_KEY;
 const AIRTABLE_BASE_ID = import.meta.env.AIRTABLE_BASE_ID;
 const AIRTABLE_TABLE_ID = import.meta.env.AIRTABLE_TABLE_ID;
+const RECAPTCHA_SECRET_KEY = import.meta.env.RECAPTCHA_SECRET_KEY;
 
 export const POST: APIRoute = async ({ request }) => {
   try {
     const data = await request.json();
-    const { email, meetingSoftware, meetingSoftwareOther, os, userResearch } = data;
+    const { email, meetingSoftware, meetingSoftwareOther, os, userResearch, recaptchaToken } = data;
+
+    // Verify reCAPTCHA token
+    const verificationURL = 'https://www.google.com/recaptcha/api/siteverify';
+    const verificationBody = new URLSearchParams({
+      secret: RECAPTCHA_SECRET_KEY,
+      response: recaptchaToken,
+    });
+
+    const recaptchaVerification = await fetch(verificationURL, {
+      method: 'POST',
+      body: verificationBody,
+    });
+
+    const verificationResult = await recaptchaVerification.json();
+    if (!verificationResult.success) {
+      return new Response(
+        JSON.stringify({ error: 'reCAPTCHA verification failed' }),
+        { status: 400 }
+      );
+    }
 
     // Initialize Airtable
     const base = new Airtable({ apiKey: AIRTABLE_API_KEY }).base(AIRTABLE_BASE_ID);

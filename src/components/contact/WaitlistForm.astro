@@ -1,6 +1,7 @@
 ---
 // WaitlistForm.astro
 import { ClientRouter } from 'astro:transitions';
+const RECAPTCHA_SITE_KEY = import.meta.env.PUBLIC_RECAPTCHA_SITE_KEY;
 ---
 
 <section class="py-16 sm:py-20">
@@ -123,6 +124,10 @@ import { ClientRouter } from 'astro:transitions';
           </div>
         </div>
 
+        <!-- reCAPTCHA v2 checkbox -->
+        <div class="g-recaptcha" data-sitekey={RECAPTCHA_SITE_KEY}></div>
+
+
         <div>
           <button
             class="bg-primary-600 dark:bg-primary-400 hover:bg-primary-700 dark:hover:bg-primary-300 focus-visible:outline-primary-600 dark:focus-visible:outline-primary-400 dark:text-primary-950 inline-flex items-center justify-center rounded-full border border-transparent px-5 py-3 text-base font-medium text-white transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
@@ -156,7 +161,7 @@ import { ClientRouter } from 'astro:transitions';
   const successMessage = document.getElementById('success-message');
   const otherMeetingSoftwareContainer = document.getElementById('other-meeting-software-container');
   const otherMeetingSoftwareInput = document.getElementById('meeting-software-other');
-  
+
   // Handle showing/hiding the "Other" meeting software input
   document.querySelectorAll('input[name="meeting-software"]').forEach((radio) => {
     radio.addEventListener('change', (e) => {
@@ -170,43 +175,31 @@ import { ClientRouter } from 'astro:transitions';
       }
     });
   });
-  
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    
+
+    const recaptchaToken = grecaptcha.getResponse();
+    if (!recaptchaToken) {
+      alert('Please complete the reCAPTCHA to proceed.');
+      return;
+    }
+
     try {
-      // Execute reCAPTCHA
-      const recaptchaResponse = await grecaptcha.execute(window.recaptchaSiteKey, {
-        action: 'submit'
-      });
-
-      // Verify reCAPTCHA first
-      const verificationResponse = await fetch('/api/verify-captcha', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ recaptchaResponse }),
-      });
-
-      if (!verificationResponse.ok) {
-        throw new Error('reCAPTCHA verification failed');
-      }
-
-      // If verification successful, proceed with form submission
       const formData = new FormData(form);
       const data = {
         email: formData.get('email'),
         meetingSoftware: formData.get('meeting-software'),
         meetingSoftwareOther: formData.get('meeting-software-other'),
         os: formData.get('os'),
-        userResearch: formData.get('user-research') === 'yes'
+        userResearch: formData.get('user-research') === 'yes',
+        recaptchaToken,
       };
-      
+
       const submitButton = form.querySelector('button[type="submit"]');
       submitButton.disabled = true;
       submitButton.textContent = 'Submitting...';
-      
+
       const response = await fetch('/api/submit-form', {
         method: 'POST',
         headers: {
@@ -214,36 +207,35 @@ import { ClientRouter } from 'astro:transitions';
         },
         body: JSON.stringify(data),
       });
-      
+
       if (!response.ok) {
         throw new Error('Form submission failed');
       }
-      
+
       // Fade out form
       formContainer.style.opacity = '0';
-      
+
       // After form fades out, show success message
       setTimeout(() => {
         formContainer.classList.add('hidden');
         successMessage.classList.remove('hidden');
-        // Trigger fade in of success message
         requestAnimationFrame(() => {
           successMessage.classList.remove('opacity-0', 'translate-y-4');
         });
-        // Reset form
         form.reset();
         otherMeetingSoftwareContainer?.classList.add('hidden');
         otherMeetingSoftwareInput.required = false;
-        // alert('Form submitted successfully!');
-      }, 300); // Match the duration of the opacity transition
-      
+      }, 300);
     } catch (error) {
       console.error('Error:', error);
       alert('There was an error submitting the form. Please try again.');
     } finally {
       const submitButton = form.querySelector('button[type="submit"]');
       submitButton.disabled = false;
-      submitButton.textContent = 'Submit';
+      submitButton.textContent = 'Join waitlist';
     }
   });
 </script>
+
+<!-- Add the reCAPTCHA v2 checkbox -->
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>

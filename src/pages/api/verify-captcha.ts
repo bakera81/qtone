@@ -1,18 +1,16 @@
-// src/pages/api/verify-captcha.ts
 import type { APIRoute } from 'astro';
 import * as Sentry from "@sentry/astro";
-
 
 const RECAPTCHA_SECRET_KEY = import.meta.env.RECAPTCHA_SECRET_KEY;
 
 export const POST: APIRoute = async ({ request }) => {
   const data = await request.json();
-  const { recaptchaResponse } = data;
+  const { recaptchaToken } = data;
 
   const verificationURL = 'https://www.google.com/recaptcha/api/siteverify';
   const verificationBody = new URLSearchParams({
     secret: RECAPTCHA_SECRET_KEY,
-    response: recaptchaResponse,
+    response: recaptchaToken,
   });
 
   try {
@@ -22,28 +20,18 @@ export const POST: APIRoute = async ({ request }) => {
     });
 
     const verificationResult = await recaptchaVerification.json();
-    if (!verificationResult.success || verificationResult.score <= 0.3) {
-      // Log the failed verification with context
-      Sentry.captureMessage(
-        'reCAPTCHA verification failed', 
-        {
-          level: 'warning',
-          extra: {
-            score: verificationResult.score,
-            success: verificationResult.success,
-          }
-        }
-      );
+    if (!verificationResult.success) {
+      Sentry.captureMessage('reCAPTCHA verification failed', {
+        level: 'warning',
+        extra: verificationResult,
+      });
       return new Response(
         JSON.stringify({ error: 'reCAPTCHA verification failed' }),
         { status: 400 }
       );
     }
 
-    return new Response(
-      JSON.stringify({ success: true, score: verificationResult.score }),
-      { status: 200 }
-    );
+    return new Response(JSON.stringify({ success: true }), { status: 200 });
   } catch (error) {
     return new Response(
       JSON.stringify({ error: 'Failed to verify reCAPTCHA' }),
